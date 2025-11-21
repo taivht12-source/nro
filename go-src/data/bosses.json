@@ -1,0 +1,149 @@
+[
+  {
+    "id": 1,
+    "name": "Broly",
+    "gender": 2,
+    "outfit": [294, 295, 296, -1, -1, -1],
+    "damage": 30000,
+    "hp": [500000000, 750000000, 1000000000],
+    "map_join": [5, 6, 27, 28, 29, 30],
+    "skills": [
+      [0, 7, 1000],
+      [1, 7, 1000],
+      [7, 7, 10000]
+    ],
+    "text_s": [
+      "|-1|Ta là Broly",
+      "|-1|Ta sẽ tiêu diệt tất cả"
+    ],
+    "text_m": [
+      "|-1|Đỡ đòn này",
+      "|-1|Yaaaa!",
+      "|-1|Sức mạnh của ta không giới hạn!"
+    ],
+    "text_e": [
+      "|-1|Ta sẽ quay lại",
+      "|-1|Không thể nào..."
+    ],
+    "seconds_rest": 1800,
+    "type_appear": 0,
+    "ai_type": "broly"
+  },
+  {
+    "id": 2,
+    "name": "Xên bọ hung",
+    "gender": 2,
+    "outfit": [228, 229, 230, -1, -1, -1],
+    "damage": 20000,
+    "hp": [500000000],
+    "map_join": [100],
+    "skills": [
+      [1, 7, 1000],
+      [7, 7, 10000],
+      [20, 3, 10000]
+    ],
+    "text_s": [
+      "|-2|Cái gì kia vậy!? Đó là loài gì thế!!?",
+      "|-1|Hôm nay sẽ là ngày đáng nhớ đây!",
+      "|-1|Ta sẽ hấp thụ số 17 và 18 để đạt được dạng hoàn hảo!"
+    ],
+    "text_m": [
+      "|-2|Hắn làm ta bất ngờ đấy! Khốn kiếp!",
+      "|-1|Đến đây nào! Khi kết hợp với ta, ngươi sẽ trở nên bất bại!",
+      "|-1|Làm đứt đuôi ta ư? Đừng quên ta có tế bào của Picôlô!!"
+    ],
+    "text_e": [
+      "|-2|Khốn kiếp, Pic.. hắn bị Cell hấp thu rồi!!"
+    ],
+    "seconds_rest": 1800,
+    "type_appear": 0,
+    "ai_type": "cell"
+  },
+  {
+    "id": 3,
+    "name": "Fide đại ca 1",
+    "gender": 2,
+    "outfit": [183, 184, 185, -1, -1, -1],
+    "damage": 22000,
+    "hp": [100000000],
+    "map_join": [80],
+    "skills": [
+      [3, 7, 1000],
+      [2, 7, 1000]
+    ],
+    "text_s": [
+      "|-2|Fide!!!, với những gì ngươi đã làm với người Xayda và Namek...",
+      "|-2|Ta phán ngươi tội: tử hình",
+      "|-1|Khẩu khí ngang tàng lắm"
+    ],
+    "text_m": [
+      "|-1|Các ngươi tới số rồi mới gặp phải ta",
+      "|-1|Trận địa pháo mini"
+    ],
+    "text_e": [
+      "|-1|Ác quỷ biến hình, hây aaaa..."
+    ],
+    "seconds_rest": 600,
+    "type_appear": 0,
+    "ai_type": "frieza"
+  },
+  {
+    "id": 4,
+    "name": "Android 13",
+    "gender": 0,
+    "outfit": [252, 253, 254, -1, -1, -1],
+    "damage": 12055,
+    "hp": [180000000],
+    "map_join": [104],
+    "skills": [
+      [1, 7, 10000],
+      [7, 7, 1000]
+    ],
+    "text_s": [
+      "|-1|Sôn..gôku",
+      "|-2|Lại là tiến sĩ Kôrê à.. rốt cuộc ông ta đã tạo ra bao nhiêu rôbốt nhân tạo thế nhỉ?",
+      "|-1|Bọn ta là rôbốt sát thủ, sinh ra từ máy tính ngài Kôrê"
+    ],
+    "text_m": [
+      "|-1|Sao thế hả? Ta mới chỉ khởi động thôi mà!",
+      "|-2|Ngươi đánh giá thấp bọn ta quá đấy!",
+      "|-1|Nếu có ý định gây trở ngại cho cuộc chiến giữa ta và Sôngôku, thì ta cũng sẽ giết ngươi ngay lập tức"
+    ],
+    "text_e": [
+      "|-1|Sô..Sông...gôku....."
+    ],
+    "seconds_rest": 600,
+    "type_appear": 3,
+    "ai_type": "android",
+    "android_id": 13
+  },
+  {
+    "id": 5,
+    "name": "Black Goku",
+    "gender": 2,
+    "outfit": [1039, 1040, 1041, -1, -1, -1],
+    "damage": 35000,
+    "hp": [800000000],
+    "map_join": [129, 130],
+    "skills": [
+      [0, 7, 1000],
+      [1, 7, 1000],
+      [21, 7, 20000]
+    ],
+    "text_s": [
+      "|-1|Ta là thần linh công lý",
+      "|-1|Loài người là tội lỗi"
+    ],
+    "text_m": [
+      "|-1|Sức mạnh của thần linh!",
+      "|-1|Super Saiyan Rose!"
+    ],
+    "text_e": [
+      "|-1|Công lý sẽ chiến thắng..."
+    ],
+    "seconds_rest": 1800,
+    "type_appear": 0,
+    "ai_type": "black_goku",
+    "is_zamasu": false
+  }
+]
