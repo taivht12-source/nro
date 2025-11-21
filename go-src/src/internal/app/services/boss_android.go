@@ -7,21 +7,26 @@ import (
 
 // AndroidAI implements Android-specific behavior with group mechanics.
 type AndroidAI struct {
-	domain.BaseBossAI
 	androidID       int
 	canSelfDestruct bool
 	groupMembers    []*domain.Boss // Other androids in the group
 }
 
-func NewAndroidAI(androidID int) *AndroidAI {
-	return &AndroidAI{
-		androidID:       androidID,
-		canSelfDestruct: androidID == 20, // Only Android 20 can self-destruct
-		groupMembers:    make([]*domain.Boss, 0),
-	}
+func init() {
+	GetBossRegistry().Register("Android", func() domain.BossAI {
+		return &AndroidAI{
+			androidID:       13, // Default, will be updated in OnSpawn or similar if needed
+			canSelfDestruct: false,
+			groupMembers:    make([]*domain.Boss, 0),
+		}
+	})
 }
 
 func (a *AndroidAI) OnSpawn(boss *domain.Boss) {
+	if boss.Template.AndroidID != 0 {
+		a.androidID = boss.Template.AndroidID
+	}
+	a.canSelfDestruct = a.androidID == 20
 	fmt.Printf("[ANDROID] Android %d has spawned!\n", a.androidID)
 }
 
@@ -36,6 +41,7 @@ func (a *AndroidAI) OnUpdate(boss *domain.Boss) {
 func (a *AndroidAI) OnAttack(boss *domain.Boss, target *domain.Player) {
 	// Default attack behavior - can be customized per android type
 	fmt.Printf("[ANDROID] Android %d attacks %s!\n", a.androidID, target.Name)
+	// Call default attack from CombatService if needed, or implement custom skill logic here
 }
 
 func (a *AndroidAI) OnDamaged(boss *domain.Boss, damage int64, attacker *domain.Player) {
@@ -59,6 +65,14 @@ func (a *AndroidAI) OnDie(boss *domain.Boss, killer *domain.Player) {
 	}
 
 	fmt.Printf("[ANDROID] Android %d has been destroyed!\n", a.androidID)
+}
+
+func (a *AndroidAI) OnJoinMap(boss *domain.Boss) {
+	fmt.Printf("[ANDROID] Android %d joined the map!\n", a.androidID)
+}
+
+func (a *AndroidAI) OnReward(boss *domain.Boss, killer *domain.Player) {
+	fmt.Printf("[ANDROID] Android %d dropped rewards for %s\n", a.androidID, killer.Name)
 }
 
 func (a *AndroidAI) checkFusionConditions(boss *domain.Boss) {

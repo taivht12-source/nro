@@ -280,3 +280,65 @@ func (cs *CombatService) Respawn(player *domain.Player) {
 	player.Y = 100
 	fmt.Printf("[COMBAT] %s respawned at spawn point\n", player.Name)
 }
+
+// AttackPlayer xử lý boss tấn công player.
+func (cs *CombatService) AttackPlayer(boss *domain.Boss, target *domain.Player) (int, error) {
+	// Calculate damage
+	damage := cs.CalculateBossDamage(boss, target)
+
+	// Apply damage
+	isDead := cs.TakeDamage(target, damage)
+
+	if isDead {
+		fmt.Printf("[COMBAT] Boss %s killed %s!\n", boss.Name, target.Name)
+		// TODO: Handle death
+	}
+
+	fmt.Printf("[COMBAT] Boss %s attacked %s - Damage: %d\n", boss.Name, target.Name, damage)
+	return damage, nil
+}
+
+// CalculateBossDamage tính damage của boss lên player.
+func (cs *CombatService) CalculateBossDamage(boss *domain.Boss, target *domain.Player) int {
+	// Base damage
+	baseDamage := boss.Damage
+
+	// TODO: Apply defense/armor of target
+	// For now, raw damage
+
+	// Random variance (90-110%)
+	variance := rand.Intn(21) - 10
+	finalDamage := baseDamage * (100 + variance) / 100
+
+	if finalDamage < 1 {
+		finalDamage = 1
+	}
+
+	return finalDamage
+}
+
+// TakeDamageBoss boss nhận damage.
+func (cs *CombatService) TakeDamageBoss(boss *domain.Boss, damage int, attacker *domain.Player) bool {
+	boss.HP -= int64(damage)
+
+	if boss.HP < 0 {
+		boss.HP = 0
+	}
+
+	// Notify AI
+	if boss.AI != nil {
+		boss.AI.OnDamaged(boss, int64(damage), attacker)
+	}
+
+	isDead := boss.HP == 0
+	fmt.Printf("[COMBAT] Boss %s took %d damage, HP: %d/%d %s\n",
+		boss.Name, damage, boss.HP, boss.MaxHP,
+		map[bool]string{true: "(DEAD)", false: ""}[isDead])
+
+	if isDead && boss.AI != nil {
+		boss.AI.OnDie(boss, attacker)
+		boss.AI.OnReward(boss, attacker)
+	}
+
+	return isDead
+}

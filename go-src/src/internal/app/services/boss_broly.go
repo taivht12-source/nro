@@ -7,19 +7,29 @@ import (
 
 // BrolyAI implements Broly-specific behavior.
 type BrolyAI struct {
-	domain.BaseBossAI
 	rageActivated bool
 }
 
-func NewBrolyAI() *BrolyAI {
-	return &BrolyAI{
-		rageActivated: false,
-	}
+func init() {
+	GetBossRegistry().Register("Broly", func() domain.BossAI {
+		return &BrolyAI{
+			rageActivated: false,
+		}
+	})
 }
 
 func (b *BrolyAI) OnSpawn(boss *domain.Boss) {
 	b.rageActivated = false
 	fmt.Printf("[BROLY] %s has spawned!\n", boss.Name)
+}
+
+func (b *BrolyAI) OnUpdate(boss *domain.Boss) {
+	// Broly specific update logic
+}
+
+func (b *BrolyAI) OnAttack(boss *domain.Boss, target *domain.Player) {
+	// Broly specific attack logic
+	fmt.Printf("[BROLY] %s attacks %s with overwhelming power!\n", boss.Name, target.Name)
 }
 
 func (b *BrolyAI) OnDamaged(boss *domain.Boss, damage int64, attacker *domain.Player) {
@@ -44,4 +54,12 @@ func (b *BrolyAI) OnDamaged(boss *domain.Boss, damage int64, attacker *domain.Pl
 func (b *BrolyAI) OnDie(boss *domain.Boss, killer *domain.Player) {
 	b.rageActivated = false
 	fmt.Printf("[BROLY] %s has been defeated by %s!\n", boss.Name, killer.Name)
+}
+
+func (b *BrolyAI) OnJoinMap(boss *domain.Boss) {
+	fmt.Printf("[BROLY] %s joined the map! The earth shakes!\n", boss.Name)
+}
+
+func (b *BrolyAI) OnReward(boss *domain.Boss, killer *domain.Player) {
+	fmt.Printf("[BROLY] %s dropped rewards for %s\n", boss.Name, killer.Name)
 }

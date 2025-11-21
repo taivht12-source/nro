@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"math"
 	"nro-go/internal/core/domain"
 	"strings"
 	"sync"
@@ -12,14 +13,7 @@ import (
 type BossManager struct {
 	activeBosses map[int]*domain.Boss
 	templates    map[int]*domain.BossTemplate
-	// androidAI    map[int]*AndroidAI   // Android AI controllers by boss ID
-	blackGokuAI map[int]*BlackGokuAI // Black Goku/Zamasu AI controllers by boss ID
-	brolyAI     map[int]*BrolyAI     // Broly AI controllers by boss ID
-	cellAI      map[int]*CellAI      // Cell AI controllers by boss ID
-	friezaAI    map[int]*FriezaAI    // Frieza AI controllers by boss ID
-	nappaAI     map[int]*NappaAI     // Nappa/Saiyan AI controllers by boss ID
-	minorBossAI map[int]*MinorBossAI // Minor boss AI controllers by boss ID
-	mu          sync.RWMutex
+	mu           sync.RWMutex
 }
 
 var bossManagerInstance *BossManager
@@ -31,13 +25,6 @@ func GetBossManager() *BossManager {
 		bossManagerInstance = &BossManager{
 			activeBosses: make(map[int]*domain.Boss),
 			templates:    make(map[int]*domain.BossTemplate),
-			// androidAI:    make(map[int]*AndroidAI),
-			blackGokuAI: make(map[int]*BlackGokuAI),
-			brolyAI:     make(map[int]*BrolyAI),
-			cellAI:      make(map[int]*CellAI),
-			friezaAI:    make(map[int]*FriezaAI),
-			nappaAI:     make(map[int]*NappaAI),
-			minorBossAI: make(map[int]*MinorBossAI),
 		}
 		// Start update loop
 		go bossManagerInstance.updateLoop()
@@ -62,6 +49,7 @@ func (m *BossManager) LoadTemplates() {
 		TextE:       []string{"Ta sẽ quay lại", "Không thể nào..."},
 		SecondsRest: 10,
 		TypeAppear:  0,
+		AIType:      "Broly",
 	}
 	fmt.Println("[BOSS] Loaded mock boss templates")
 
@@ -120,6 +108,11 @@ func (m *BossManager) updateLoop() {
 func (m *BossManager) updateBoss(boss *domain.Boss) {
 	now := time.Now().UnixMilli()
 
+	// AI Hook: OnUpdate
+	if boss.AI != nil {
+		boss.AI.OnUpdate(boss)
+	}
+
 	switch boss.Status {
 	case domain.BossStatusRest:
 		if now-boss.LastTimeRest >= int64(boss.Template.SecondsRest*1000) {
@@ -135,6 +128,9 @@ func (m *BossManager) updateBoss(boss *domain.Boss) {
 		boss.Status = domain.BossStatusChatS
 		boss.LastTimeChatS = now
 		boss.IndexChatS = 0
+		if boss.AI != nil {
+			boss.AI.OnJoinMap(boss)
+		}
 	case domain.BossStatusChatS:
 		if m.chatS(boss) {
 			boss.Status = domain.BossStatusActive
@@ -199,10 +195,75 @@ func (m *BossManager) chatM(boss *domain.Boss) {
 }
 
 func (m *BossManager) active(boss *domain.Boss) {
-	// TODO: Implement attack logic
 	// 1. Find target
-	// 2. Move to target
-	// 3. Use skill
+	target := m.findTarget(boss)
+	if target == nil {
+		return
+	}
+
+	// 2. Check distance
+	dist := m.calculateDistance(boss.X, boss.Y, target.X, target.Y)
+
+	// 3. Move or Attack
+	if dist > 50 { // Attack range 50
+		m.moveTo(boss, target.X, target.Y)
+	} else {
+		// Attack
+		now := time.Now().UnixMilli()
+		if now-boss.LastTimeAttack >= 2000 { // 2s attack speed
+			// AI Hook: OnAttack
+			if boss.AI != nil {
+				boss.AI.OnAttack(boss, target)
+			} else {
+				// Default attack if no AI override
+				combatService := GetCombatService()
+				combatService.AttackPlayer(boss, target)
+			}
+			boss.LastTimeAttack = now
+		}
+	}
+}
+
+func (m *BossManager) findTarget(boss *domain.Boss) *domain.Player {
+	zoneService := GetZoneService()
+	players := zoneService.GetPlayersInZone(boss.MapID, boss.ZoneID)
+
+	var nearest *domain.Player
+	minDist := 999999.0
+
+	for _, p := range players {
+		if p.HP <= 0 {
+			continue
+		}
+		dist := m.calculateDistance(boss.X, boss.Y, p.X, p.Y)
+		if dist < minDist {
+			minDist = dist
+			nearest = p
+		}
+	}
+	return nearest
+}
+
+func (m *BossManager) calculateDistance(x1, y1, x2, y2 int16) float64 {
+	return math.Sqrt(math.Pow(float64(x1-x2), 2) + math.Pow(float64(y1-y2), 2))
+}
+
+func (m *BossManager) moveTo(boss *domain.Boss, targetX, targetY int16) {
+	// Simple move logic: move 20 units towards target
+	dx := targetX - boss.X
+	dy := targetY - boss.Y
+
+	// Normalize
+	dist := m.calculateDistance(boss.X, boss.Y, targetX, targetY)
+	if dist > 0 {
+		step := 20.0
+		if step > dist {
+			step = dist
+		}
+		boss.X += int16(float64(dx) / dist * step)
+		boss.Y += int16(float64(dy) / dist * step)
+		// fmt.Printf("[BOSS] %s moved to (%d, %d)\n", boss.Name, boss.X, boss.Y)
+	}
 }
 
 func (m *BossManager) chatE(boss *domain.Boss) bool {
@@ -228,90 +289,22 @@ func (m *BossManager) leaveMap(boss *domain.Boss) {
 
 // assignAI creates and assigns the appropriate AI controller for a boss.
 func (m *BossManager) assignAI(boss *domain.Boss) {
-	bossName := strings.ToLower(boss.Name)
-	bossID := boss.ID
-
-	// // Android bosses
-	// if strings.Contains(bossName, "android") || strings.Contains(bossName, "số") {
-	// 	androidID := 13 // Default
-	// 	if strings.Contains(bossName, "14") {
-	// 		androidID = 14
-	// 	} else if strings.Contains(bossName, "15") {
-	// 		androidID = 15
-	// 	} else if strings.Contains(bossName, "20") || strings.Contains(bossName, "dr gero") {
-	// 		androidID = 20
-	// 	}
-	// 	ai := NewAndroidAI(androidID)
-	// 	m.androidAI[bossID] = ai
-	// 	ai.OnSpawn(boss)
-	// 	boss.AI = ai
-	// 	fmt.Printf("[BOSS] Assigned AndroidAI (ID: %d) to %s\n", androidID, boss.Name)
-	// 	return
-	// }
-
-	// Black Goku / Zamasu
-	if strings.Contains(bossName, "black") || strings.Contains(bossName, "zamasu") {
-		isZamasu := strings.Contains(bossName, "zamasu")
-		ai := NewBlackGokuAI(isZamasu)
-		m.blackGokuAI[bossID] = ai
-		ai.OnSpawn(boss)
-		boss.AI = ai
-		fmt.Printf("[BOSS] Assigned BlackGokuAI (Zamasu: %v) to %s\n", isZamasu, boss.Name)
-		return
-	}
-
-	// Broly
-	if strings.Contains(bossName, "broly") {
-		ai := NewBrolyAI()
-		m.brolyAI[bossID] = ai
-		ai.OnSpawn(boss)
-		boss.AI = ai
-		fmt.Printf("[BOSS] Assigned BrolyAI to %s\n", boss.Name)
-		return
-	}
-
-	// Cell
-	if strings.Contains(bossName, "cell") || strings.Contains(bossName, "xên") {
-		ai := NewCellAI()
-		m.cellAI[bossID] = ai
-		ai.OnSpawn(boss)
-		boss.AI = ai
-		fmt.Printf("[BOSS] Assigned CellAI to %s\n", boss.Name)
-		return
-	}
-
-	// Frieza
-	if strings.Contains(bossName, "frieza") || strings.Contains(bossName, "fide") {
-		isGolden := strings.Contains(bossName, "golden") || strings.Contains(bossName, "vàng")
-		ai := NewFriezaAI(isGolden)
-		m.friezaAI[bossID] = ai
-		ai.OnSpawn(boss)
-		boss.AI = ai
-		fmt.Printf("[BOSS] Assigned FriezaAI (Golden: %v) to %s\n", isGolden, boss.Name)
-		return
-	}
-
-	// Nappa / Saiyan
-	if strings.Contains(bossName, "nappa") || strings.Contains(bossName, "vegeta") ||
-		strings.Contains(bossName, "raditz") || strings.Contains(bossName, "kakarot") {
-		saiyanType := "nappa"
-		if strings.Contains(bossName, "vegeta") {
-			saiyanType = "vegeta"
-		} else if strings.Contains(bossName, "raditz") {
-			saiyanType = "raditz"
+	if boss.Template.AIType == "" {
+		// Try to guess from name if not specified
+		if strings.Contains(strings.ToLower(boss.Name), "broly") {
+			boss.Template.AIType = "Broly"
+		} else {
+			boss.Template.AIType = "Default"
 		}
-		ai := NewNappaAI(saiyanType)
-		m.nappaAI[bossID] = ai
-		ai.OnSpawn(boss)
-		boss.AI = ai
-		fmt.Printf("[BOSS] Assigned NappaAI (Type: %s) to %s\n", saiyanType, boss.Name)
+	}
+
+	ai, err := GetBossRegistry().CreateAI(boss.Template.AIType)
+	if err != nil {
+		fmt.Printf("[BOSS] Failed to create AI for type %s: %v\n", boss.Template.AIType, err)
 		return
 	}
 
-	// Default: Minor Boss AI
-	ai := NewMinorBossAI(bossName)
-	m.minorBossAI[bossID] = ai
-	ai.OnSpawn(boss)
 	boss.AI = ai
-	fmt.Printf("[BOSS] Assigned MinorBossAI to %s\n", boss.Name)
+	ai.OnSpawn(boss)
+	fmt.Printf("[BOSS] Assigned AI %s to %s\n", boss.Template.AIType, boss.Name)
 }

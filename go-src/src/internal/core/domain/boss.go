@@ -82,3 +82,25 @@ type Boss struct {
 func (b *Boss) IsDead() bool {
 	return b.HP <= 0
 }
+
+// BossAI defines the interface for boss AI logic.
+type BossAI interface {
+	OnSpawn(boss *Boss)
+	OnUpdate(boss *Boss)
+	OnJoinMap(boss *Boss)
+	OnAttack(boss *Boss, target *Player)
+	OnDamaged(boss *Boss, damage int64, attacker *Player)
+	OnDie(boss *Boss, killer *Player)
+	OnReward(boss *Boss, killer *Player)
+}
+
+// BaseBossAI provides default implementations for BossAI.
+type BaseBossAI struct{}
+
+func (b *BaseBossAI) OnSpawn(boss *Boss)                                   {}
+func (b *BaseBossAI) OnUpdate(boss *Boss)                                  {}
+func (b *BaseBossAI) OnJoinMap(boss *Boss)                                 {}
+func (b *BaseBossAI) OnAttack(boss *Boss, target *Player)                  {}
+func (b *BaseBossAI) OnDamaged(boss *Boss, damage int64, attacker *Player) {}
+func (b *BaseBossAI) OnDie(boss *Boss, killer *Player)                     {}
+func (b *BaseBossAI) OnReward(boss *Boss, killer *Player)                  {}
