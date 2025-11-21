@@ -3,7 +3,7 @@ package persistence
 import (
 	"database/sql"
 	"fmt"
-	"nro-go/internal/infrastructure/config"
+	"nro/src/internal/infrastructure/config"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"

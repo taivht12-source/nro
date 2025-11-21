@@ -3,7 +3,7 @@ package services
 import (
 	"fmt"
 	"math"
-	"nro-go/internal/core/domain"
+	"nro/src/internal/core/domain"
 	"strings"
 	"sync"
 	"time"

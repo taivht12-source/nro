@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
-	"nro-go/pkg/protocol"
+	"nro/src/pkg/protocol"
 	"time"
 )
 

@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"nro-go/internal/core/domain"
-	"nro-go/internal/core/ports"
+	"nro/src/internal/core/domain"
+	"nro/src/internal/core/ports"
 )
 
 type MySQLShopRepository struct {

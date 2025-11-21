@@ -1,6 +1,6 @@
 package ports
 
-import "nro-go/internal/core/domain"
+import "nro/src/internal/core/domain"
 
 // SkillRepository defines methods for accessing skill data.
 type SkillRepository interface {

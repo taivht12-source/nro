@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"nro-go/internal/app/commands"
-	"nro-go/internal/app/services"
-	"nro-go/internal/core/ports"
-	"nro-go/internal/infrastructure/config"
-	"nro-go/internal/infrastructure/network"
-	"nro-go/internal/infrastructure/persistence"
+	"nro/src/internal/app/commands"
+	"nro/src/internal/app/services"
+	"nro/src/internal/core/ports"
+	"nro/src/internal/infrastructure/config"
+	"nro/src/internal/infrastructure/network"
+	"nro/src/internal/infrastructure/persistence"
 )
 
 func main() {

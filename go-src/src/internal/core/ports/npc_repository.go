@@ -1,6 +1,6 @@
 package ports
 
-import "nro-go/internal/core/domain"
+import "nro/src/internal/core/domain"
 
 // NPCRepository defines operations for accessing NPC data.
 type NPCRepository interface {

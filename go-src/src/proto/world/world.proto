@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package world;
 
-option go_package = "nro-go/proto/world";
+option go_package = "nro/src/proto/world";
 
 service WorldService {
   rpc GetPlayerInfo (GetPlayerInfoRequest) returns (GetPlayerInfoResponse);

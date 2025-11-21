@@ -1,6 +1,6 @@
 package ports
 
-import "nro-go/internal/core/domain"
+import "nro/src/internal/core/domain"
 
 // UserRepository định nghĩa các phương thức tương tác với dữ liệu User.
 type UserRepository interface {

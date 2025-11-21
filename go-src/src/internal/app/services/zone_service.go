@@ -2,9 +2,9 @@ package services
 
 import (
 	"fmt"
-	"nro-go/internal/core/domain"
-	"nro-go/internal/infrastructure/session"
-	"nro-go/pkg/protocol"
+	"nro/src/internal/core/domain"
+	"nro/src/internal/infrastructure/session"
+	"nro/src/pkg/protocol"
 	"sync"
 )
 

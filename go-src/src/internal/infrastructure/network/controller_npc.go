@@ -2,9 +2,9 @@ package network
 
 import (
 	"fmt"
-	"nro-go/internal/app/services"
-	"nro-go/internal/core/domain"
-	"nro-go/pkg/protocol"
+	"nro/src/internal/app/services"
+	"nro/src/internal/core/domain"
+	"nro/src/pkg/protocol"
 )
 
 // handleNPCInteract xử lý tương tác với NPC.

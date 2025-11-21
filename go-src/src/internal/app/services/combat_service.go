@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
-	"nro-go/internal/core/domain"
+	"nro/src/internal/core/domain"
 	"time"
 )
 

@@ -1,6 +1,6 @@
 package ports
 
-import "nro-go/internal/core/domain"
+import "nro/src/internal/core/domain"
 
 type ShopRepository interface {
 	GetShop(id int) (*domain.Shop, error)

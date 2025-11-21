@@ -3,7 +3,7 @@ package services
 import (
 	"encoding/json"
 	"fmt"
-	"nro-go/internal/core/domain"
+	"nro/src/internal/core/domain"
 	"os"
 )
 

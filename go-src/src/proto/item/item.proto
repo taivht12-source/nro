@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package item;
 
-option go_package = "nro-go/proto/item";
+option go_package = "nro/src/proto/item";
 
 service ItemService {
   rpc GetInventory (GetInventoryRequest) returns (GetInventoryResponse);

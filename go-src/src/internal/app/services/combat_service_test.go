@@ -1,7 +1,7 @@
 package services
 
 import (
-	"nro-go/internal/core/domain"
+	"nro/src/internal/core/domain"
 	"testing"
 )
 

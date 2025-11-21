@@ -2,11 +2,11 @@ package network
 
 import (
 	"fmt"
-	"nro-go/internal/app/commands"
-	"nro-go/internal/app/services"
-	"nro-go/internal/core/domain"
-	"nro-go/internal/infrastructure/session"
-	"nro-go/pkg/protocol"
+	"nro/src/internal/app/commands"
+	"nro/src/internal/app/services"
+	"nro/src/internal/core/domain"
+	"nro/src/internal/infrastructure/session"
+	"nro/src/pkg/protocol"
 )
 
 // Controller xử lý các gói tin từ Client.

@@ -2,7 +2,7 @@ package services
 
 import (
 	"fmt"
-	"nro-go/internal/core/domain"
+	"nro/src/internal/core/domain"
 )
 
 // BrolyAI implements Broly-specific behavior.

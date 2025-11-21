@@ -1,6 +1,6 @@
 package services
 
-import "nro-go/internal/core/domain"
+import "nro/src/internal/core/domain"
 
 // BossData holds the static data for all bosses.
 var BossData = map[int]*domain.BossTemplate{

@@ -1,7 +1,7 @@
 package session
 
 import (
-	"nro-go/pkg/protocol"
+	"nro/src/pkg/protocol"
 	"sync"
 )
 

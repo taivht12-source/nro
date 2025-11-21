@@ -2,8 +2,8 @@ package services
 
 import (
 	"fmt"
-	"nro-go/internal/core/domain"
-	"nro-go/internal/core/ports"
+	"nro/src/internal/core/domain"
+	"nro/src/internal/core/ports"
 	"sync"
 	"time"
 )

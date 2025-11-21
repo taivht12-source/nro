@@ -1,6 +1,6 @@
 package ports
 
-import "nro-go/internal/core/domain"
+import "nro/src/internal/core/domain"
 
 // MapRepository định nghĩa các phương thức tương tác với dữ liệu Map.
 type MapRepository interface {
